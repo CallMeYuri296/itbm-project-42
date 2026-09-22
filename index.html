@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BloxVerse | ITBM Roblox-Style Gaming Platform</title>
+  <meta name="description" content="An interactive web-based Roblox-style gaming platform MVP with avatar customization, virtual economy, and business commercialization models.">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/lobby.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOPBAR / NAVIGATION (ROBLOX THEME)
+       ======================================================================== -->
+  <header class="topbar">
+    <div class="brand-section" onclick="window.BloxLobby.switchTab('view-games', document.querySelector('[data-view=\'view-games\']'))">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 8L12 3L20 8V16L12 21L4 16V8Z" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">BloxVerse</span>
+        <span class="brand-tag">ITBM Platform MVP</span>
+      </div>
+    </div>
+
+    <!-- Navigation Hub Tabs -->
+    <nav class="nav-tabs" aria-label="Main Navigation">
+      <button class="nav-tab-btn active" data-view="view-games">
+        <span>🎮</span> Games Hub
+      </button>
+      <button class="nav-tab-btn" data-view="view-shop">
+        <span>🛍️</span> Shop
+      </button>
+      <button class="nav-tab-btn" data-view="view-leaderboard">
+        <span>🏆</span> Leaderboard
+      </button>
+      <button class="nav-tab-btn" data-view="view-business">
+        <span>💼</span> Business Hub <span class="badge-new">ITBM</span>
+      </button>
+    </nav>
+
+    <!-- Topbar Actions: Coins & Active Profile -->
+    <div class="topbar-actions">
+      <!-- Coin Wallet Display -->
+      <div class="coin-badge" id="topbar-coin-badge" title="Virtual Coin Balance">
+        <div class="coin-icon">¢</div>
+        <span id="topbar-coin-val">100</span>
+      </div>
+
+      <!-- Active Avatar Pill -->
+      <div class="user-profile-pill" id="user-profile-pill" title="Click to Switch Avatar">
+        <div class="user-avatar-mini" id="topbar-avatar-mini">
+          <!-- Mini SVG inserted via JS -->
+        </div>
+        <div class="user-name-wrapper">
+          <span class="user-name-text" id="topbar-user-name">Aahaan</span>
+          <span class="user-role-text" id="topbar-user-role">Tech Adventurer</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       PRESENTATION & DEMO TOOLBAR
+       Provides instant shortcuts for grading and demonstration
+       ======================================================================== -->
+  <aside class="demo-toolbar">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span style="font-weight: 700; color: #fff;">⚡ ITBM Demo Tools:</span>
+      <span>Quick-test platform wallet persistence and simulation</span>
+    </div>
+    <div class="demo-controls-group">
+      <button class="demo-btn gold" id="demo-add-50">+50 Coins</button>
+      <button class="demo-btn gold" id="demo-add-100">+100 Coins</button>
+      <button class="demo-btn danger" id="demo-reset">Reset Data</button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       MAIN APP CONTENT
+       ======================================================================== -->
+  <main class="main-content">
+
+    <!-- ----------------------------------------------------------------------
+         VIEW 1: GAMES HUB (MAIN LOBBY)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section active" id="view-games">
+
+      <!-- Hero Character Podium & Welcome Stats -->
+      <div class="lobby-hero-grid">
+        <!-- 3D Character Showcase Podium -->
+        <div class="podium-card">
+          <span class="podium-badge">Active Avatar</span>
+          
+          <div class="podium-stage">
+            <div class="podium-disk" id="podium-disk"></div>
+            <div class="podium-avatar-wrapper" id="podium-avatar-container">
+              <!-- Rendered SVG Avatar -->
+            </div>
+          </div>
+
+          <div class="podium-info">
+            <h2 class="podium-character-name" id="podium-char-name">Aahaan</h2>
+            <div class="podium-character-role" id="podium-char-role">Tech Adventurer</div>
+            <p class="podium-character-tagline" id="podium-char-tagline">"Master of Cyber Coordinates & Platform Agility"</p>
+          </div>
+
+          <div class="podium-actions">
+            <button class="btn btn-primary" id="btn-switch-avatar">
+              <span>👤</span> Switch Character
+            </button>
+          </div>
+        </div>
+
+        <!-- Welcome Banner & Platform Metrics -->
+        <div class="lobby-banner-box">
+          <div class="banner-sparkle"></div>
+          <div>
+            <div class="hero-welcome-badge">
+              <span>🚀</span> ITBM Project Prototype • Phase 1
+            </div>
+            <h1 class="hero-headline">
+              Welcome to <span>BloxVerse</span>
+            </h1>
+            <p class="hero-description">
+              An interactive metaverse platform prototype developed for Information Technology & Business Management. Experience player-centric avatars, virtual tokenomics, and diverse multi-tiered monetization loops.
+            </p>
+          </div>
+
+          <!-- Live Player Statistics Strip -->
+          <div class="stats-strip">
+            <div class="stat-card">
+              <span class="stat-label">Wallet Balance</span>
+              <span class="stat-value gold" id="stat-total-coins">100</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Games Played</span>
+              <span class="stat-value" id="stat-games-played">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Obby Best</span>
+              <span class="stat-value" id="stat-obby-best">--</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Survival Time</span>
+              <span class="stat-value" id="stat-survival-best">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini-Games Selection Header -->
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span>🎮</span> Select Mini-Game
+          </h2>
+          <p class="section-subtitle">
+            Compete, jump, and survive to accumulate BloxCoins for avatar accessories
+          </p>
+        </div>
+      </div>
+
+      <!-- Mini-Games Portals Grid -->
+      <div class="games-grid">
+        <!-- Game 1: Obstacle Course ("Obby") -->
+        <div class="game-card">
+          <div class="game-thumbnail obby-theme">
+            <svg class="game-thumb-svg" viewBox="0 0 100 100" fill="none">
+              <!-- Obstacle Platforms & Character -->
+              <rect x="15" y="70" width="30" height="12" rx="3" fill="#ffffff"/>
+              <rect x="55" y="48" width="30" height="12" rx="3" fill="#ffffff"/>
+              <rect x="25" y="26" width="30" height="12" rx="3" fill="#ffffff"/>
+              <circle cx="40" cy="18" r="6" fill="#ffd166"/>
+              <rect x="36" y="24" width="8" height="10" rx="2" fill="#00e5ff"/>
+              <line x1="50" y1="85" x2="90" y2="85" stroke="#ff3366" stroke-width="4" stroke-dasharray="4 4"/>
+            </svg>
+            <span class="game-status-badge phase-tag">Phase 2</span>
+          </div>
+          <div class="game-body">
+            <h3 class="game-title">Tower of Obby</h3>
+            <p class="game-desc">
+              Classic jump-and-run obstacle parkour. Navigate floating sky platforms, avoid deadly laser hazard strips, and climb toward the trophy.
+            </p>
+            <div class="game-meta-row">
+              <div class="reward-pill">
+                <span>🪙</span> +50 Coins / Clear
+              </div>
+              <div class="difficulty-pill">
+                Difficulty: Medium
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Coming in Phase 2', 'The Obstacle Course engine will be built in Phase 2!', 'info', '⏳')">
+              Launch Obby (Phase 2)
+            </button>
+          </div>
+        </div>
+
+        <!-- Game 2: Coin Collection Arena -->
+        <div class="game-card">
+          <div class="game-thumbnail coins-theme">
+            <svg class="game-thumb-svg" viewBox="0 0 100 100" fill="none">
+              <!-- Gold Coins & Dash Trails -->
+              <circle cx="50" cy="50" r="28" fill="#ffd166" stroke="#b45309" stroke-width="3"/>
+              <text x="50" y="58" fill="#78350f" font-size="24" font-weight="900" text-anchor="middle">¢</text>
+              <circle cx="20" cy="30" r="10" fill="#fde047" opacity="0.8"/>
+              <circle cx="80" cy="70" r="12" fill="#fde047" opacity="0.8"/>
+            </svg>
+            <span class="game-status-badge phase-tag">Phase 3</span>
+          </div>
+          <div class="game-body">
+            <h3 class="game-title">Gold Rush Arena</h3>
+            <p class="game-desc">
+              Fast-paced timed dash challenge. Sprint around the arena to gather glittering BloxCoins before the round countdown hits zero.
+            </p>
+            <div class="game-meta-row">
+              <div class="reward-pill">
+                <span>🪙</span> Up to +30 Coins
+              </div>
+              <div class="difficulty-pill">
+                Difficulty: Casual
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Coming in Phase 3', 'The Coin Collection arena will be built in Phase 3!', 'info', '⏳')">
+              Launch Arena (Phase 3)
+            </button>
+          </div>
+        </div>
+
+        <!-- Game 3: Hazard Survival -->
+        <div class="game-card">
+          <div class="game-thumbnail survival-theme">
+            <svg class="game-thumb-svg" viewBox="0 0 100 100" fill="none">
+              <!-- Laser Beams & Shield -->
+              <rect x="20" y="20" width="60" height="60" rx="10" stroke="#00e676" stroke-width="3" stroke-dasharray="6 4"/>
+              <polygon points="50,30 65,45 50,75 35,45" fill="#ff3366"/>
+              <circle cx="50" cy="50" r="8" fill="#ffffff"/>
+            </svg>
+            <span class="game-status-badge phase-tag">Phase 3</span>
+          </div>
+          <div class="game-body">
+            <h3 class="game-title">Hazard Dodge</h3>
+            <p class="game-desc">
+              High-intensity avoidance sprint. Dodge moving laser grids, falling blocks, and expanding hazard zones for as long as possible.
+            </p>
+            <div class="game-meta-row">
+              <div class="reward-pill">
+                <span>🪙</span> Survival Multiplier
+              </div>
+              <div class="difficulty-pill">
+                Difficulty: Hard
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Coming in Phase 3', 'The Survival Dodge mini-game will be built in Phase 3!', 'info', '⏳')">
+              Launch Survival (Phase 3)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Showcase Teaser Strip -->
+      <div class="business-showcase-container">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <div class="biz-tag">ITBM Curriculum Integration</div>
+            <h3 style="font-size: 1.4rem; font-weight: 800;">Commercialization & Monetization Architecture</h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; max-width: 700px; margin-top: 4px;">
+              BloxVerse demonstrates how modern interactive gaming ecosystems monetize through virtual currencies, brand integrations, opt-in video rewards, and cosmetic asset marketplaces.
+            </p>
+          </div>
+          <button class="btn btn-primary" onclick="window.BloxLobby.switchTab('view-business', document.querySelector('[data-view=\'view-business\']'))">
+            Explore Business Models →
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW 2: SHOP PREVIEW (PHASE 4 PREVIEW)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-shop">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span>🛍️</span> In-Game Cosmetic Shop
+          </h2>
+          <p class="section-subtitle">
+            Spend earned BloxCoins to unlock hats, cloaks, and particle trails (Full functional catalog unlocks in Phase 4)
+          </p>
+        </div>
+      </div>
+
+      <div class="games-grid">
+        <div class="game-card">
+          <div class="game-thumbnail" style="background: linear-gradient(135deg, #2b5876, #4e4376);">
+            <div style="font-size: 3.5rem;">👑</div>
+            <span class="game-status-badge phase-tag">Phase 4</span>
+          </div>
+          <div class="game-body">
+            <h3 class="game-title">Crown of Aurelia</h3>
+            <p class="game-desc">A shimmering golden royal accessory with particle sparkle trails.</p>
+            <div class="game-meta-row">
+              <span class="reward-pill">🪙 150 Coins</span>
+              <span class="difficulty-pill">Cosmetic Headwear</span>
+            </div>
+            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Unlocks in Phase 4', 'Full shop purchasing will be activated in Phase 4!', 'info', '🔒')">
+              Preview Item
+            </button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <div class="game-thumbnail" style="background: linear-gradient(135deg, #134e5e, #71b280);">
+            <div style="font-size: 3.5rem;">⚡</div>
+            <span class="game-status-badge phase-tag">Phase 4</span>
+          </div>
+          <div class="game-body">
+            <h3 class="game-title">Neon Sprint Trail</h3>
+            <p class="game-desc">Leaves an electric cyan light ribbon behind your character as you run.</p>
+            <div class="game-meta-row">
+              <span class="reward-pill">🪙 200 Coins</span>
+              <span class="difficulty-pill">Particle Trail</span>
+            </div>
+            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Unlocks in Phase 4', 'Full shop purchasing will be activated in Phase 4!', 'info', '🔒')">
+              Preview Item
+            </button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <div class="game-thumbnail" style="background: linear-gradient(135deg, #4776e6, #8e54e9);">
+            <div style="font-size: 3.5rem;">🥽</div>
+            <span class="game-status-badge phase-tag">Phase 4</span>
+          </div>
+          <div class="game-body">
+            <h3 class="game-title">Cyberpunk Visor HUD</h3>
+            <p class="game-desc">Holographic heads-up display overlay with dynamic neon scanlines.</p>
+            <div class="game-meta-row">
+              <span class="reward-pill">🪙 120 Coins</span>
+              <span class="difficulty-pill">Facial Gear</span>
+            </div>
+            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Unlocks in Phase 4', 'Full shop purchasing will be activated in Phase 4!', 'info', '🔒')">
+              Preview Item
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW 3: LEADERBOARD PREVIEW (PHASE 4 PREVIEW)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-leaderboard">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span>🏆</span> Global Leaderboards
+          </h2>
+          <p class="section-subtitle">
+            Track top scores and speedrun times across the player base (Full persistence & ranking in Phase 4)
+          </p>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border-strong); color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase;">
+              <th style="padding: 12px;">Rank</th>
+              <th style="padding: 12px;">Player</th>
+              <th style="padding: 12px;">Character</th>
+              <th style="padding: 12px;">Obby High Score</th>
+              <th style="padding: 12px;">Survival Time</th>
+              <th style="padding: 12px;">Coins</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 14px 12px; font-weight: 800; color: #ffd166;">#1 🥇</td>
+              <td style="padding: 14px 12px; font-weight: 700;">Aahaan</td>
+              <td style="padding: 14px 12px; color: var(--roblox-blue);">Tech Adventurer</td>
+              <td style="padding: 14px 12px;">420 pts</td>
+              <td style="padding: 14px 12px;">64.2s</td>
+              <td style="padding: 14px 12px; color: var(--coin-gold); font-weight: 700;">1,250 ¢</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 14px 12px; font-weight: 800; color: #e2e8f0;">#2 🥈</td>
+              <td style="padding: 14px 12px; font-weight: 700;">Hetvi</td>
+              <td style="padding: 14px 12px; color: var(--purple-accent);">Creative Strategist</td>
+              <td style="padding: 14px 12px;">380 pts</td>
+              <td style="padding: 14px 12px;">58.0s</td>
+              <td style="padding: 14px 12px; color: var(--coin-gold); font-weight: 700;">1,100 ¢</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 14px 12px; font-weight: 800; color: #cd7f32;">#3 🥉</td>
+              <td style="padding: 14px 12px; font-weight: 700;">Sanvi</td>
+              <td style="padding: 14px 12px; color: var(--success-green);">Speed Champion</td>
+              <td style="padding: 14px 12px;">360 pts</td>
+              <td style="padding: 14px 12px;">55.4s</td>
+              <td style="padding: 14px 12px; color: var(--coin-gold); font-weight: 700;">980 ¢</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW 4: ITBM BUSINESS & COMMERCIALIZATION HUB
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-business">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span>💼</span> Commercialization & Monetization Showcase
+          </h2>
+          <p class="section-subtitle">
+            Academic presentation modules highlighting four foundational revenue streams in modern interactive digital platforms
+          </p>
+        </div>
+      </div>
+
+      <div class="business-cards-grid">
+        <!-- Business Model 1: Sponsored Game Worlds -->
+        <div class="biz-card">
+          <div class="biz-tag">Stream 01 • B2B Brand Partnerships</div>
+          <h3 class="biz-title">Sponsored Brand Worlds</h3>
+          <p class="biz-desc">
+            Corporations sponsor custom in-game branded arenas and virtual billboards. Brands achieve organic, non-intrusive consumer engagement through interactive gamified experiences.
+          </p>
+          <div class="biz-metric-box">
+            <div class="biz-metric-label">Key Performance Indicator</div>
+            <div class="biz-metric-val">Dwell Time & Brand Recall (>85%)</div>
+          </div>
+          <span class="badge-new" style="width: fit-content;">Native Brand Integration</span>
+        </div>
+
+        <!-- Business Model 2: Rewarded Video Ads (Interactive) -->
+        <div class="biz-card" style="border-color: rgba(255, 184, 0, 0.4); box-shadow: 0 4px 20px rgba(255, 184, 0, 0.1);">
+          <div class="biz-tag" style="color: var(--coin-gold);">Stream 02 • Value-Exchange Monetization</div>
+          <h3 class="biz-title">Opt-in Rewarded Ads</h3>
+          <p class="biz-desc">
+            Players willingly choose to view a sponsor clip in exchange for in-game currency. Generates premium eCPMs without degrading player retention.
+          </p>
+          <div class="biz-metric-box">
+            <div class="biz-metric-label">Simulate In Real-Time</div>
+            <div class="biz-metric-val">+25 BloxCoins Reward</div>
+          </div>
+          <button class="btn btn-gold btn-sm" id="btn-simulate-ad">
+            <span>▶</span> Watch Sponsor Ad (+25 Coins)
+          </button>
+        </div>
+
+        <!-- Business Model 3: Freemium & VIP Battle Pass -->
+        <div class="biz-card">
+          <div class="biz-tag">Stream 03 • Consumer Microtransactions</div>
+          <h3 class="biz-title">VIP Season Passes</h3>
+          <p class="biz-desc">
+            Tiered progression rewards that incentivize consistent daily engagement. Players convert free game time into exclusive cosmetic prestige items.
+          </p>
+          <div class="biz-metric-box">
+            <div class="biz-metric-label">ARPU & Retention</div>
+            <div class="biz-metric-val">3.2x Average Revenue Per User</div>
+          </div>
+          <span class="badge-new" style="width: fit-content; background: linear-gradient(135deg, #9d4edd, #5a189a);">Recurring Subscription</span>
+        </div>
+      </div>
+
+      <!-- Virtual Economy Diagram / Flowchart Box -->
+      <div style="margin-top: 28px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 26px;">
+        <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 8px;">The BloxVerse Closed-Loop Virtual Economy</h4>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px;">
+          An overview of how value flows between players, developers, and platform operators:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;">
+          <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+            <div style="font-size: 1.8rem; margin-bottom: 6px;">🕹️</div>
+            <div style="font-weight: 700; font-size: 0.9rem;">1. Engagement</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Player completes Obby & mini-games</div>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+            <div style="font-size: 1.8rem; margin-bottom: 6px;">🪙</div>
+            <div style="font-weight: 700; font-size: 0.9rem;">2. Token Minting</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">BloxCoins credited to local wallet</div>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+            <div style="font-size: 1.8rem; margin-bottom: 6px;">🛍️</div>
+            <div style="font-weight: 700; font-size: 0.9rem;">3. Cosmetic Sink</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Coins spent on accessories & hats</div>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+            <div style="font-size: 1.8rem; margin-bottom: 6px;">📈</div>
+            <div style="font-weight: 700; font-size: 0.9rem;">4. Creator Revenue</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Platform commission + developer split</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       AVATAR SELECTOR MODAL
+       Allows switching between Aahaan, Hetvi, and Sanvi
+       ======================================================================== -->
+  <div class="modal-overlay" id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-title">Choose Your Avatar</h3>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Select a character to represent your profile across all mini-games</p>
+        </div>
+        <button class="modal-close-btn" id="avatar-modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="avatar-selection-grid" id="avatar-selection-list">
+          <!-- Populated dynamically by js/lobby.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       REWARDED AD SIMULATION OVERLAY
+       Demonstrates ITBM value-exchange advertising interactively
+       ======================================================================== -->
+  <div id="ad-simulation-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px;">
+    <div style="background: #1e2433; border: 2px solid var(--roblox-blue); border-radius: var(--radius-xl); padding: 36px 40px; max-width: 480px; width: 100%; box-shadow: 0 0 50px rgba(0,162,255,0.4);">
+      <div style="font-size: 0.75rem; font-weight: 800; color: var(--coin-gold); letter-spacing: 1px; text-transform: uppercase;">
+        ITBM Interactive Ad Simulation
+      </div>
+      <div style="font-size: 3.5rem; margin: 16px 0;">⚡</div>
+      <h3 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 8px;">Quantum Cloud Solutions</h3>
+      <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px;">
+        "Accelerating Enterprise Digital Transformation & Gaming Infrastructures."
+      </p>
+      <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-pill); padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Reward grants in:</span>
+        <strong id="ad-timer-countdown" style="font-size: 1.2rem; color: var(--coin-gold);">3</strong>s
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       TOAST NOTIFICATION CONTAINER
+       ======================================================================== -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <p>
+      <strong>BloxVerse ITBM Prototype</strong> • Information Technology & Business Management Presentation MVP
+    </p>
+    <p style="margin-top: 4px; color: var(--text-muted);">
+      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 1 Complete
+    </p>
+  </footer>
+
+  <!-- Application Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/avatars.js"></script>
+  <script src="js/lobby.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

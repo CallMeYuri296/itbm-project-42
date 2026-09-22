@@ -1,0 +1,605 @@
+/* ==========================================================================
+   BLOXVERSE ITBM EDITION - LOBBY & HUB STYLING
+   Character Podium, Game Portals, Avatar Modal & Business Showcase
+   ========================================================================== */
+
+/* ==========================================================================
+   HERO / PODIUM SHOWCASE SECTION
+   ========================================================================== */
+.lobby-hero-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+
+@media (max-width: 960px) {
+  .lobby-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Character Podium Box */
+.podium-card {
+  background: linear-gradient(180deg, rgba(29, 35, 49, 0.7) 0%, rgba(18, 22, 31, 0.95) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.podium-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(0, 162, 255, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+  transition: background 0.4s ease;
+}
+
+.podium-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.podium-stage {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* 3D-Like Base Disk under avatar */
+.podium-disk {
+  position: absolute;
+  bottom: 15px;
+  width: 190px;
+  height: 52px;
+  background: radial-gradient(ellipse at center, rgba(0, 162, 255, 0.45) 0%, rgba(0, 162, 255, 0.05) 70%, transparent 100%);
+  border-radius: 50%;
+  transform: rotateX(60deg);
+  border: 2px solid rgba(0, 162, 255, 0.4);
+  box-shadow: 0 0 30px rgba(0, 162, 255, 0.35);
+  animation: diskPulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes diskPulse {
+  0% { transform: rotateX(60deg) scale(0.95); opacity: 0.7; }
+  100% { transform: rotateX(60deg) scale(1.05); opacity: 1; filter: drop-shadow(0 0 15px var(--roblox-blue)); }
+}
+
+/* Floating Avatar SVG Container */
+.podium-avatar-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 190px;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: avatarFloat 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes avatarFloat {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-12px); }
+}
+
+.podium-avatar-wrapper svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* Podium Character Info */
+.podium-info {
+  text-align: center;
+  width: 100%;
+  margin-top: 12px;
+  z-index: 2;
+}
+
+.podium-character-name {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.podium-character-role {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--roblox-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.podium-character-tagline {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 18px;
+  padding: 0 10px;
+}
+
+.podium-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   DASHBOARD / STATS & WELCOME HERO
+   ========================================================================== */
+.lobby-banner-box {
+  background: linear-gradient(135deg, rgba(23, 27, 39, 0.9) 0%, rgba(31, 38, 56, 0.75) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.banner-sparkle {
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(255, 184, 0, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-welcome-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 162, 255, 0.15);
+  border: 1px solid rgba(0, 162, 255, 0.3);
+  color: var(--roblox-blue);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 12px;
+  width: fit-content;
+}
+
+.hero-headline {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+.hero-headline span {
+  background: linear-gradient(135deg, #00a2ff, #00e676);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  max-width: 600px;
+  margin-bottom: 24px;
+}
+
+/* Live Stats Strip */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: auto;
+}
+
+@media (max-width: 680px) {
+  .stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-card {
+  background: rgba(15, 18, 26, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.stat-value.gold {
+  color: var(--coin-gold);
+}
+
+/* ==========================================================================
+   MINI-GAME PORTAL CARDS
+   ========================================================================== */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 1050px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.game-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-smooth);
+  position: relative;
+}
+
+.game-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--roblox-blue);
+  box-shadow: 0 12px 30px rgba(0, 162, 255, 0.2);
+}
+
+.game-thumbnail {
+  height: 170px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-thumbnail.obby-theme {
+  background: linear-gradient(135deg, #ff416c, #8a2387);
+}
+
+.game-thumbnail.coins-theme {
+  background: linear-gradient(135deg, #f7971e, #ffd200);
+}
+
+.game-thumbnail.survival-theme {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.game-thumb-svg {
+  width: 90px;
+  height: 90px;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+  transition: transform var(--transition-fast);
+}
+
+.game-card:hover .game-thumb-svg {
+  transform: scale(1.1) rotate(-3deg);
+}
+
+.game-status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.game-status-badge.playable {
+  background: var(--success-green);
+  color: #0b3d1c;
+}
+
+.game-status-badge.phase-tag {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  backdrop-filter: blur(4px);
+}
+
+.game-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.game-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.game-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.game-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+}
+
+.reward-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--coin-gold);
+  font-weight: 700;
+}
+
+.difficulty-pill {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   COMMERCIALIZATION & BUSINESS SHOWCASE (ITBM HIGHLIGHT)
+   ========================================================================== */
+.business-showcase-container {
+  background: linear-gradient(180deg, rgba(23, 27, 38, 0.9) 0%, rgba(17, 20, 28, 0.95) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  margin-top: 40px;
+  box-shadow: var(--shadow-lg);
+}
+
+.business-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .business-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.biz-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.biz-card:hover {
+  border-color: rgba(255, 184, 0, 0.4);
+  transform: translateY(-3px);
+}
+
+.biz-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--coin-gold);
+  margin-bottom: 8px;
+}
+
+.biz-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.biz-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.biz-metric-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border-left: 3px solid var(--roblox-blue);
+}
+
+.biz-metric-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.biz-metric-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* ==========================================================================
+   AVATAR SELECTOR MODAL
+   ========================================================================== */
+.avatar-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 720px) {
+  .avatar-selection-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.avatar-select-card {
+  background: var(--bg-surface-elevated);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.avatar-select-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--roblox-blue);
+}
+
+.avatar-select-card.selected {
+  border-color: var(--success-green);
+  background: rgba(0, 230, 118, 0.05);
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.2);
+}
+
+.avatar-selected-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--success-green);
+  color: #053b1e;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  display: none;
+}
+
+.avatar-select-card.selected .avatar-selected-badge {
+  display: block;
+}
+
+.avatar-card-preview {
+  width: 140px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.avatar-card-preview svg {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-card-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+  color: #fff;
+}
+
+.avatar-card-role {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--roblox-blue);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.avatar-card-traits {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.trait-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trait-bar-track {
+  width: 80px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.trait-bar-fill {
+  height: 100%;
+  background: var(--roblox-blue);
+  border-radius: 3px;
+}
