@@ -23,6 +23,7 @@ const DEFAULT_STATE = {
     hat: null,
     trail: null
   },
+  achievements: [],         // Phase 4: array of unlocked achievement IDs
   settings: {
     sfxEnabled: true
   }
@@ -34,7 +35,9 @@ class StateManager {
       balanceChanged: [],
       avatarChanged: [],
       statsChanged: [],
-      stateReset: []
+      stateReset: [],
+      inventoryChanged: [],   // Phase 4: shop purchase / unlock
+      achievementUnlocked: [] // Phase 4: milestone reached
     };
     this.state = this.loadState();
   }
@@ -52,7 +55,11 @@ class StateManager {
           ...DEFAULT_STATE,
           ...parsed,
           stats: { ...DEFAULT_STATE.stats, ...(parsed.stats || {}) },
-          settings: { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) }
+          settings: { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) },
+          activeCosmetics: { ...DEFAULT_STATE.activeCosmetics, ...(parsed.activeCosmetics || {}) },
+          // Phase 4: preserve arrays from saved state; fall back to empty arrays
+          unlockedItems: parsed.unlockedItems || DEFAULT_STATE.unlockedItems,
+          achievements: parsed.achievements || DEFAULT_STATE.achievements
         };
       }
     } catch (e) {
@@ -203,6 +210,78 @@ class StateManager {
     this.emit('balanceChanged', { balance: this.state.balance, diff: 0, type: 'reset', reason: 'System Reset' });
     this.emit('avatarChanged', { avatarId: this.state.activeAvatarId });
     this.emit('statsChanged', { stats: this.state.stats });
+    this.emit('inventoryChanged', { unlockedItems: this.state.unlockedItems, activeCosmetics: this.state.activeCosmetics });
+  }
+
+  // ── Phase 4: Inventory Methods ──────────────────────────────────────────
+
+  /**
+   * Returns array of unlocked item IDs
+   */
+  getUnlockedItems() {
+    return [...(this.state.unlockedItems || [])];
+  }
+
+  /**
+   * Mark an item as unlocked/purchased in inventory
+   * @param {string} itemId
+   */
+  unlockItem(itemId) {
+    if (!this.state.unlockedItems) this.state.unlockedItems = ['starter_badge'];
+    if (this.state.unlockedItems.includes(itemId)) return false;
+    this.state.unlockedItems.push(itemId);
+    this.saveState();
+    this.emit('inventoryChanged', {
+      unlockedItems: this.state.unlockedItems,
+      activeCosmetics: this.state.activeCosmetics
+    });
+    return true;
+  }
+
+  // ── Phase 4: Cosmetics Methods ──────────────────────────────────────────
+
+  /**
+   * Returns a copy of activeCosmetics { hat, trail }
+   */
+  getActiveCosmetics() {
+    return { ...(this.state.activeCosmetics || { hat: null, trail: null }) };
+  }
+
+  /**
+   * Equip or clear a cosmetic slot
+   * @param {'hat' | 'trail'} slot
+   * @param {string | null} itemId
+   */
+  setCosmetic(slot, itemId) {
+    if (!this.state.activeCosmetics) this.state.activeCosmetics = { hat: null, trail: null };
+    this.state.activeCosmetics[slot] = itemId;
+    this.saveState();
+    this.emit('inventoryChanged', {
+      unlockedItems: this.state.unlockedItems,
+      activeCosmetics: this.state.activeCosmetics
+    });
+  }
+
+  // ── Phase 4: Achievement Methods ────────────────────────────────────────
+
+  /**
+   * Returns array of unlocked achievement IDs
+   */
+  getAchievements() {
+    return [...(this.state.achievements || [])];
+  }
+
+  /**
+   * Unlock an achievement (idempotent — safe to call multiple times)
+   * @param {string} achievementId
+   */
+  unlockAchievement(achievementId) {
+    if (!this.state.achievements) this.state.achievements = [];
+    if (this.state.achievements.includes(achievementId)) return false;
+    this.state.achievements.push(achievementId);
+    this.saveState();
+    this.emit('achievementUnlocked', { achievementId, achievements: this.state.achievements });
+    return true;
   }
 }
 

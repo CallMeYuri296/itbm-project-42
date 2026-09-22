@@ -114,6 +114,14 @@ class LobbyManager {
     if (window.HazardDodgeGame) {
       window.HazardDodgeGame.mount('hazarddodge-canvas');
     }
+    if (window.BloxShop) {
+      window.BloxShop.render();
+    }
+    if (window.BloxAchievements) {
+      window.BloxAchievements.check();
+      window.BloxAchievements.renderGrid();
+    }
+    this.renderLeaderboard();
   }
 
   cacheDOM() {
@@ -226,19 +234,37 @@ class LobbyManager {
     // React to state changes
     this.state.subscribe('balanceChanged', ({ balance, diff, type, reason }) => {
       this.renderCoins(balance, diff > 0);
+      if (window.BloxShop) window.BloxShop.render();
+      if (window.BloxAchievements) window.BloxAchievements.check();
+      this.renderLeaderboard();
     });
 
     this.state.subscribe('avatarChanged', ({ avatarId }) => {
       this.renderAvatarProfile(avatarId);
       this.updateAvatarModalSelection(avatarId);
+      this.renderLeaderboard();
     });
 
     this.state.subscribe('statsChanged', ({ stats }) => {
       this.renderStats(stats);
+      if (window.BloxAchievements) window.BloxAchievements.check();
+      this.renderLeaderboard();
+    });
+
+    this.state.subscribe('inventoryChanged', () => {
+      this.renderAvatarProfile(this.state.getActiveAvatarId());
+      if (window.BloxShop) window.BloxShop.render();
+      if (window.BloxAchievements) window.BloxAchievements.check();
     });
 
     this.state.subscribe('stateReset', () => {
       this.renderAll();
+      if (window.BloxShop) window.BloxShop.render();
+      if (window.BloxAchievements) {
+        window.BloxAchievements.check();
+        window.BloxAchievements.renderGrid();
+      }
+      this.renderLeaderboard();
     });
   }
 
@@ -275,17 +301,18 @@ class LobbyManager {
 
   renderAvatarProfile(avatarId) {
     const avatar = window.AVATAR_REGISTRY[avatarId] || window.AVATAR_REGISTRY.aahaan;
+    const cosmetics = this.state.getActiveCosmetics ? this.state.getActiveCosmetics() : {};
 
     // Topbar Pill
     if (this.dom.topbarAvatarMini) {
-      this.dom.topbarAvatarMini.innerHTML = window.renderAvatarSVG(avatar.id, { badgeMode: true });
+      this.dom.topbarAvatarMini.innerHTML = window.renderAvatarSVG(avatar.id, { badgeMode: true, cosmetics });
     }
     if (this.dom.topbarUserName) this.dom.topbarUserName.textContent = avatar.name;
     if (this.dom.topbarUserRole) this.dom.topbarUserRole.textContent = avatar.title;
 
     // Podium Showcase
     if (this.dom.podiumAvatar) {
-      this.dom.podiumAvatar.innerHTML = window.renderAvatarSVG(avatar.id, { badgeMode: false });
+      this.dom.podiumAvatar.innerHTML = window.renderAvatarSVG(avatar.id, { badgeMode: false, cosmetics });
     }
     if (this.dom.podiumName) this.dom.podiumName.textContent = avatar.name;
     if (this.dom.podiumRole) this.dom.podiumRole.textContent = avatar.title;
@@ -474,6 +501,10 @@ class LobbyManager {
       window.ObbyGame.stop();
       window.ObbyGame.hideVictoryModal();
     }
+    if (window.BloxAchievements) {
+      window.BloxAchievements.check();
+      window.BloxAchievements.renderGrid();
+    }
     const gamesTab = document.querySelector('[data-view="view-games"]');
     if (gamesTab) {
       this.switchTab('view-games', gamesTab);
@@ -499,6 +530,10 @@ class LobbyManager {
     if (window.CoinRushGame) {
       window.CoinRushGame.stop();
       window.CoinRushGame.hideResultModal();
+    }
+    if (window.BloxAchievements) {
+      window.BloxAchievements.check();
+      window.BloxAchievements.renderGrid();
     }
     const gamesTab = document.querySelector('[data-view="view-games"]');
     if (gamesTab) {
@@ -526,10 +561,108 @@ class LobbyManager {
       window.HazardDodgeGame.stop();
       window.HazardDodgeGame.hideResultModal();
     }
+    if (window.BloxAchievements) {
+      window.BloxAchievements.check();
+      window.BloxAchievements.renderGrid();
+    }
     const gamesTab = document.querySelector('[data-view="view-games"]');
     if (gamesTab) {
       this.switchTab('view-games', gamesTab);
     }
+  }
+
+  /**
+   * Phase 4: Dynamic Leaderboard Rendering
+   * Renders real high score data combined with roster stats
+   */
+  renderLeaderboard(filter = 'all') {
+    const tableBody = document.getElementById('leaderboard-tbody');
+    if (!tableBody) return;
+
+    const s = this.state.getState();
+    const activeId = s.activeAvatarId;
+    const stats = s.stats;
+    const balance = s.balance;
+
+    // Build data for all 3 avatar identities
+    // Active avatar gets player's real live recorded stats
+    const roster = [
+      {
+        id: 'aahaan',
+        name: 'Aahaan',
+        role: 'Tech Adventurer',
+        color: 'var(--roblox-blue)',
+        avatarBadge: 'AH',
+        badgeBg: '#17223b',
+        obbyScore: activeId === 'aahaan' ? (stats.obbyHighScore || 0) : Math.max(320, stats.obbyHighScore || 0),
+        goldRushScore: activeId === 'aahaan' ? (stats.coinRushHighScore || 0) : Math.max(85, stats.coinRushHighScore || 0),
+        survivalTime: activeId === 'aahaan' ? (stats.survivalHighScore || 0) : 48.5,
+        coins: activeId === 'aahaan' ? balance : 1250,
+        isCurrent: activeId === 'aahaan'
+      },
+      {
+        id: 'hetvi',
+        name: 'Hetvi',
+        role: 'Creative Strategist',
+        color: '#9d4edd',
+        avatarBadge: 'HV',
+        badgeBg: '#3c096c',
+        obbyScore: activeId === 'hetvi' ? (stats.obbyHighScore || 0) : Math.max(280, stats.obbyHighScore || 0),
+        goldRushScore: activeId === 'hetvi' ? (stats.coinRushHighScore || 0) : Math.max(95, stats.coinRushHighScore || 0),
+        survivalTime: activeId === 'hetvi' ? (stats.survivalHighScore || 0) : 42.0,
+        coins: activeId === 'hetvi' ? balance : 1100,
+        isCurrent: activeId === 'hetvi'
+      },
+      {
+        id: 'sanvi',
+        name: 'Sanvi',
+        role: 'Speed Champion',
+        color: '#06d6a0',
+        avatarBadge: 'SV',
+        badgeBg: '#07241a',
+        obbyScore: activeId === 'sanvi' ? (stats.obbyHighScore || 0) : Math.max(310, stats.obbyHighScore || 0),
+        goldRushScore: activeId === 'sanvi' ? (stats.coinRushHighScore || 0) : Math.max(70, stats.coinRushHighScore || 0),
+        survivalTime: activeId === 'sanvi' ? (stats.survivalHighScore || 0) : 52.8,
+        coins: activeId === 'sanvi' ? balance : 980,
+        isCurrent: activeId === 'sanvi'
+      }
+    ];
+
+    // Calculate composite rank score: Obby + (GoldRush * 3) + (Survival * 10)
+    roster.forEach(r => {
+      r.totalRating = (r.obbyScore) + (r.goldRushScore * 3) + Math.round(r.survivalTime * 10);
+    });
+
+    roster.sort((a, b) => b.totalRating - a.totalRating);
+
+    const rankMedals = ['🥇 #1', '🥈 #2', '🥉 #3'];
+    const rankColors = ['lb-rank-gold', 'lb-rank-silver', 'lb-rank-bronze'];
+
+    tableBody.innerHTML = roster.map((player, idx) => {
+      return `
+        <tr class="${player.isCurrent ? 'current-player' : ''}">
+          <td class="lb-rank-cell ${rankColors[idx] || 'lb-rank-default'}">${rankMedals[idx] || '#' + (idx + 1)}</td>
+          <td>
+            <div class="lb-player-cell">
+              <div class="lb-avatar-icon" style="background:${player.badgeBg}; color:${player.color}; border: 1.5px solid ${player.color};">
+                ${player.avatarBadge}
+              </div>
+              <div>
+                <div style="font-weight:800; color:#fff; display:flex; align-items:center; gap:6px;">
+                  ${player.name}
+                  ${player.isCurrent ? '<span class="you-badge">YOU</span>' : ''}
+                </div>
+                <div style="font-size:0.72rem; color:var(--text-muted);">${player.role}</div>
+              </div>
+            </div>
+          </td>
+          <td class="lb-score-cell">${player.obbyScore > 0 ? player.obbyScore + ' pts' : '--'}</td>
+          <td class="lb-score-cell">${player.goldRushScore > 0 ? player.goldRushScore + ' 🪙' : '--'}</td>
+          <td class="lb-score-cell">${player.survivalTime > 0 ? player.survivalTime.toFixed(1) + 's' : '--'}</td>
+          <td class="lb-coins-cell">${player.coins.toLocaleString()} ¢</td>
+        </tr>
+      `;
+    }).join('');
   }
 }
 

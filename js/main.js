@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.BloxPlatform = {
     state: window.BloxState,
     lobby: window.BloxLobby,
+    shop: window.BloxShop,
+    achievements: window.BloxAchievements,
     avatars: window.AVATAR_REGISTRY,
     addCoins: (n) => window.BloxState.addCoins(n, 'Console Command'),
     setAvatar: (id) => window.BloxState.setActiveAvatar(id),

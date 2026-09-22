@@ -82,13 +82,14 @@ const AVATAR_REGISTRY = {
 /**
  * Procedural Roblox Blocky Character SVG Generator
  * @param {string} avatarId - 'aahaan' | 'hetvi' | 'sanvi'
- * @param {object} options - { badgeMode: boolean }
+ * @param {object} options - { badgeMode: boolean, cosmetics: { hat, trail } }
  * @returns {string} Clean SVG markup string
  */
 function renderAvatarSVG(avatarId, options = {}) {
   const avatar = AVATAR_REGISTRY[avatarId] || AVATAR_REGISTRY.aahaan;
   const c = avatar.colors;
   const isBadge = options.badgeMode === true;
+  const cosmetics = options.cosmetics || {};
 
   if (isBadge) {
     // Compact head-only badge icon
@@ -176,10 +177,79 @@ function renderAvatarSVG(avatarId, options = {}) {
           <!-- Classic Roblox Face Features -->
           ${renderAvatarFaceAndGear(avatar.id, c, false)}
         </g>
+
+        <!-- PHASE 4 COSMETIC OVERLAYS -->
+        ${renderCosmeticOverlay(cosmetics)}
       </g>
     </svg>
   `;
 }
+
+/**
+ * Renders Phase 4 cosmetic overlays on top of the avatar (hat slot & trail slot)
+ * @param {{ hat: string|null, trail: string|null }} cosmetics
+ * @returns {string} SVG group fragment
+ */
+function renderCosmeticOverlay(cosmetics) {
+  let overlay = '';
+
+  if (cosmetics.hat === 'crown_aurelia') {
+    // Golden Crown of Aurelia — sits on top of the head
+    overlay += `
+      <g id="cosmetic-crown" opacity="0.97">
+        <!-- Crown base band -->
+        <rect x="76" y="30" width="88" height="14" rx="4" fill="#b8860b" stroke="#997300" stroke-width="1.5"/>
+        <!-- Crown spikes -->
+        <path d="M80 32 L92 12 L104 24 L120 6 L136 24 L148 12 L160 32 Z" fill="#ffd166" stroke="#b8860b" stroke-width="2"/>
+        <!-- Jewels on spikes -->
+        <circle cx="120" cy="10" r="4.5" fill="#ffffff" stroke="#b8860b" stroke-width="1.5"/>
+        <circle cx="92" cy="16" r="3" fill="#ff70a6" stroke="#b8860b" stroke-width="1"/>
+        <circle cx="148" cy="16" r="3" fill="#06d6a0" stroke="#b8860b" stroke-width="1"/>
+        <!-- Sparkles -->
+        <text x="60" y="20" font-size="10" opacity="0.8">✨</text>
+        <text x="164" y="20" font-size="10" opacity="0.8">✨</text>
+      </g>
+    `;
+  } else if (cosmetics.hat === 'visor_hud') {
+    // Cyberpunk Visor HUD — overlays on the face area (replaces original visor with cosmetic version)
+    overlay += `
+      <g id="cosmetic-visor" opacity="0.97">
+        <!-- Outer frame -->
+        <rect x="78" y="47" width="84" height="30" rx="7" fill="#0b1320" stroke="#00e5ff" stroke-width="2.5"/>
+        <!-- HUD inner display -->
+        <rect x="82" y="51" width="76" height="22" rx="4" fill="#00e5ff" opacity="0.75"/>
+        <!-- Scanlines -->
+        <line x1="86" y1="55" x2="154" y2="55" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
+        <line x1="86" y1="60" x2="154" y2="60" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+        <line x1="86" y1="65" x2="154" y2="65" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+        <!-- Side pods -->
+        <rect x="68" y="50" width="10" height="22" rx="4" fill="#00e5ff"/>
+        <rect x="162" y="50" width="10" height="22" rx="4" fill="#00e5ff"/>
+        <!-- Status dots -->
+        <circle cx="148" cy="56" r="3" fill="#39ff14"/>
+        <circle cx="140" cy="56" r="2" fill="#ffffff" opacity="0.6"/>
+      </g>
+    `;
+  }
+
+  // Trail slot — visible as glow effect around legs in lobby view
+  if (cosmetics.trail === 'neon_trail') {
+    overlay += `
+      <g id="cosmetic-trail" opacity="0.7">
+        <!-- Neon trail particles behind feet -->
+        <ellipse cx="95" cy="296" rx="18" ry="5" fill="#00e5ff" opacity="0.5"/>
+        <ellipse cx="145" cy="296" rx="18" ry="5" fill="#00e5ff" opacity="0.5"/>
+        <circle cx="85" cy="300" r="3" fill="#00e5ff" opacity="0.6"/>
+        <circle cx="110" cy="302" r="2" fill="#00e5ff" opacity="0.4"/>
+        <circle cx="155" cy="300" r="3" fill="#00e5ff" opacity="0.6"/>
+        <circle cx="130" cy="302" r="2" fill="#00e5ff" opacity="0.4"/>
+      </g>
+    `;
+  }
+
+  return overlay;
+}
+
 
 /**
  * Renders custom face & headgear based on the character identity

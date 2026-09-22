@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/lobby.css">
   <link rel="stylesheet" href="css/obby.css">
   <link rel="stylesheet" href="css/games.css">
+  <link rel="stylesheet" href="css/phase4.css">
 </head>
 <body>
 
@@ -41,6 +42,9 @@
       </button>
       <button class="nav-tab-btn" data-view="view-leaderboard">
         <span>🏆</span> Leaderboard
+      </button>
+      <button class="nav-tab-btn" data-view="view-achievements">
+        <span>🎖️</span> Achievements
       </button>
       <button class="nav-tab-btn" data-view="view-business">
         <span>💼</span> Business Hub <span class="badge-new">ITBM</span>
@@ -585,7 +589,7 @@
     </section>
 
     <!-- ----------------------------------------------------------------------
-         VIEW 2: SHOP PREVIEW (PHASE 4 PREVIEW)
+         VIEW 2: SHOP (PHASE 4 ACTIVE)
          ---------------------------------------------------------------------- -->
     <section class="view-section" id="view-shop">
       <div class="section-header">
@@ -594,70 +598,26 @@
             <span>🛍️</span> In-Game Cosmetic Shop
           </h2>
           <p class="section-subtitle">
-            Spend earned BloxCoins to unlock hats, cloaks, and particle trails (Full functional catalog unlocks in Phase 4)
+            Spend earned BloxCoins to unlock hats, visors, and particle trails that render dynamically on your avatar!
           </p>
         </div>
       </div>
 
-      <div class="games-grid">
-        <div class="game-card">
-          <div class="game-thumbnail" style="background: linear-gradient(135deg, #2b5876, #4e4376);">
-            <div style="font-size: 3.5rem;">👑</div>
-            <span class="game-status-badge phase-tag">Phase 4</span>
-          </div>
-          <div class="game-body">
-            <h3 class="game-title">Crown of Aurelia</h3>
-            <p class="game-desc">A shimmering golden royal accessory with particle sparkle trails.</p>
-            <div class="game-meta-row">
-              <span class="reward-pill">🪙 150 Coins</span>
-              <span class="difficulty-pill">Cosmetic Headwear</span>
-            </div>
-            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Unlocks in Phase 4', 'Full shop purchasing will be activated in Phase 4!', 'info', '🔒')">
-              Preview Item
-            </button>
-          </div>
-        </div>
+      <!-- Category Filter Pills -->
+      <div class="shop-category-tabs">
+        <button class="shop-cat-btn active">All Items</button>
+        <button class="shop-cat-btn" onclick="window.BloxLobby.showToast('Filter Applied', 'Showing All Hats & Headwear', 'info', '👑')">Hats & Crowns</button>
+        <button class="shop-cat-btn" onclick="window.BloxLobby.showToast('Filter Applied', 'Showing All Trail Effects', 'info', '⚡')">Particle Trails</button>
+      </div>
 
-        <div class="game-card">
-          <div class="game-thumbnail" style="background: linear-gradient(135deg, #134e5e, #71b280);">
-            <div style="font-size: 3.5rem;">⚡</div>
-            <span class="game-status-badge phase-tag">Phase 4</span>
-          </div>
-          <div class="game-body">
-            <h3 class="game-title">Neon Sprint Trail</h3>
-            <p class="game-desc">Leaves an electric cyan light ribbon behind your character as you run.</p>
-            <div class="game-meta-row">
-              <span class="reward-pill">🪙 200 Coins</span>
-              <span class="difficulty-pill">Particle Trail</span>
-            </div>
-            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Unlocks in Phase 4', 'Full shop purchasing will be activated in Phase 4!', 'info', '🔒')">
-              Preview Item
-            </button>
-          </div>
-        </div>
-
-        <div class="game-card">
-          <div class="game-thumbnail" style="background: linear-gradient(135deg, #4776e6, #8e54e9);">
-            <div style="font-size: 3.5rem;">🥽</div>
-            <span class="game-status-badge phase-tag">Phase 4</span>
-          </div>
-          <div class="game-body">
-            <h3 class="game-title">Cyberpunk Visor HUD</h3>
-            <p class="game-desc">Holographic heads-up display overlay with dynamic neon scanlines.</p>
-            <div class="game-meta-row">
-              <span class="reward-pill">🪙 120 Coins</span>
-              <span class="difficulty-pill">Facial Gear</span>
-            </div>
-            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Unlocks in Phase 4', 'Full shop purchasing will be activated in Phase 4!', 'info', '🔒')">
-              Preview Item
-            </button>
-          </div>
-        </div>
+      <!-- Dynamic Shop Items Grid (populated by js/shop.js) -->
+      <div class="shop-grid" id="shop-grid-container">
+        <!-- Rendered dynamically by window.BloxShop.render() -->
       </div>
     </section>
 
     <!-- ----------------------------------------------------------------------
-         VIEW 3: LEADERBOARD PREVIEW (PHASE 4 PREVIEW)
+         VIEW 3: LEADERBOARD (PHASE 4 DYNAMIC)
          ---------------------------------------------------------------------- -->
     <section class="view-section" id="view-leaderboard">
       <div class="section-header">
@@ -666,50 +626,47 @@
             <span>🏆</span> Global Leaderboards
           </h2>
           <p class="section-subtitle">
-            Track top scores and speedrun times across the player base (Full persistence & ranking in Phase 4)
+            Live competitive ranking calculated from Obby scores, Gold Rush coins, and Hazard Dodge survival times.
           </p>
         </div>
       </div>
 
-      <div style="background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem;">
+      <div class="leaderboard-table-wrapper">
+        <table class="lb-table">
           <thead>
-            <tr style="border-bottom: 2px solid var(--border-strong); color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase;">
-              <th style="padding: 12px;">Rank</th>
-              <th style="padding: 12px;">Player</th>
-              <th style="padding: 12px;">Character</th>
-              <th style="padding: 12px;">Obby High Score</th>
-              <th style="padding: 12px;">Survival Time</th>
-              <th style="padding: 12px;">Coins</th>
+            <tr>
+              <th>Rank</th>
+              <th>Player & Identity</th>
+              <th>Obby Score</th>
+              <th>Gold Rush</th>
+              <th>Survival Time</th>
+              <th>Coins</th>
             </tr>
           </thead>
-          <tbody>
-            <tr style="border-bottom: 1px solid var(--border-subtle);">
-              <td style="padding: 14px 12px; font-weight: 800; color: #ffd166;">#1 🥇</td>
-              <td style="padding: 14px 12px; font-weight: 700;">Aahaan</td>
-              <td style="padding: 14px 12px; color: var(--roblox-blue);">Tech Adventurer</td>
-              <td style="padding: 14px 12px;">420 pts</td>
-              <td style="padding: 14px 12px;">64.2s</td>
-              <td style="padding: 14px 12px; color: var(--coin-gold); font-weight: 700;">1,250 ¢</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border-subtle);">
-              <td style="padding: 14px 12px; font-weight: 800; color: #e2e8f0;">#2 🥈</td>
-              <td style="padding: 14px 12px; font-weight: 700;">Hetvi</td>
-              <td style="padding: 14px 12px; color: var(--purple-accent);">Creative Strategist</td>
-              <td style="padding: 14px 12px;">380 pts</td>
-              <td style="padding: 14px 12px;">58.0s</td>
-              <td style="padding: 14px 12px; color: var(--coin-gold); font-weight: 700;">1,100 ¢</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border-subtle);">
-              <td style="padding: 14px 12px; font-weight: 800; color: #cd7f32;">#3 🥉</td>
-              <td style="padding: 14px 12px; font-weight: 700;">Sanvi</td>
-              <td style="padding: 14px 12px; color: var(--success-green);">Speed Champion</td>
-              <td style="padding: 14px 12px;">360 pts</td>
-              <td style="padding: 14px 12px;">55.4s</td>
-              <td style="padding: 14px 12px; color: var(--coin-gold); font-weight: 700;">980 ¢</td>
-            </tr>
+          <tbody id="leaderboard-tbody">
+            <!-- Rendered dynamically by window.BloxLobby.renderLeaderboard() -->
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW: ACHIEVEMENTS & PROGRESSION (PHASE 4)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-achievements">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span>🎖️</span> Achievements & Progression
+          </h2>
+          <p class="section-subtitle">
+            Earn milestone badges across all three mini-games and cosmetic collections.
+          </p>
+        </div>
+      </div>
+
+      <div class="achievements-grid" id="achievements-grid-container">
+        <!-- Rendered dynamically by window.BloxAchievements.renderGrid() -->
       </div>
     </section>
 
@@ -863,13 +820,15 @@
       <strong>BloxVerse ITBM Prototype</strong> • Information Technology & Business Management Presentation MVP
     </p>
     <p style="margin-top: 4px; color: var(--text-muted);">
-      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 3 Active (All 3 Mini-Games Playable!)
+      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 4 Complete (Full Interactive MVP Ready!)
     </p>
   </footer>
 
   <!-- Application Scripts -->
   <script src="js/state.js"></script>
   <script src="js/avatars.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/achievements.js"></script>
   <script src="js/obby.js"></script>
   <script src="js/coinrush.js"></script>
   <script src="js/hazarddodge.js"></script>
