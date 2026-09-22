@@ -1,0 +1,224 @@
+/* ==========================================================================
+   BLOXVERSE ITBM EDITION - MINI-GAMES COMMON & ARENA STYLES
+   Coin Rush Arena & Hazard Dodge Survival
+   ========================================================================== */
+
+/* Universal Arena View Container */
+.arena-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Arena Nav Header */
+.arena-nav-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.arena-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.arena-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.arena-icon-badge.coins {
+  background: linear-gradient(135deg, #f7971e, #ffd200);
+  box-shadow: 0 4px 14px rgba(255, 210, 0, 0.4);
+}
+
+.arena-icon-badge.survival {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  box-shadow: 0 4px 14px rgba(56, 239, 125, 0.4);
+}
+
+.arena-stats-hud {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* Arena Canvas Wrapper */
+.arena-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 580px;
+  background: #0b0f19;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.arena-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* On-Screen Arena Overlay Guide */
+.arena-overlay-guide {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  background: rgba(15, 17, 23, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+/* Game Results Overlay */
+.game-result-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 14, 23, 0.92);
+  backdrop-filter: blur(12px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  z-index: 50;
+  padding: 24px;
+  animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.game-result-modal-overlay.show {
+  display: flex;
+}
+
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.result-badge-icon {
+  font-size: 4rem;
+  margin-bottom: 6px;
+  animation: badgeHover 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes badgeHover {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+.result-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.result-title.coins {
+  background: linear-gradient(135deg, #ffd166, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.result-title.survival {
+  background: linear-gradient(135deg, #00e676, #00e5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.result-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 440px;
+  margin-bottom: 24px;
+}
+
+/* Touch Directional Controls for Arena (Virtual D-pad) */
+.arena-touch-bar {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 14px;
+  padding: 0 10px;
+}
+
+@media (hover: none) or (pointer: coarse) or (max-width: 800px) {
+  .arena-touch-bar {
+    display: flex;
+  }
+}
+
+.dpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 4px;
+}
+
+.dpad-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+
+.dpad-btn:active, .dpad-btn.pressed {
+  background: var(--roblox-blue);
+  border-color: #fff;
+  transform: scale(0.92);
+}
+
+.dash-btn {
+  width: 90px;
+  height: 60px;
+  background: linear-gradient(135deg, #00e676, #00a2ff);
+  border: 2px solid #fff;
+  border-radius: 16px;
+  color: #052614;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);
+}
+
+.dash-btn:active {
+  transform: scale(0.92);
+}

@@ -54,5 +54,5 @@ itbm-project-42/
 ## 🗺️ Development Roadmap
 - [x] **Phase 1**: Base Architecture, Main Lobby UI, Player Avatars (Aahaan, Hetvi, Sanvi), and LocalStorage Economy State.
 - [x] **Phase 2**: Obstacle Course ("Tower of Obby") Mini-Game (2D Canvas platformer, physics, hazards, checkpoints, coin reward loop).
-- [ ] **Phase 3**: Coin Collection Arena & Survival/Avoidance Mini-Games.
+- [x] **Phase 3**: Coin Collection Arena ("Gold Rush") & Survival/Avoidance ("Hazard Dodge") Mini-Games.
 - [ ] **Phase 4**: In-Game Shop, Cosmetic Customization, Leaderboards, and Commercialization UI placeholders.

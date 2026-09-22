@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/lobby.css">
   <link rel="stylesheet" href="css/obby.css">
+  <link rel="stylesheet" href="css/games.css">
 </head>
 <body>
 
@@ -149,7 +150,11 @@
               <span class="stat-value" id="stat-obby-best">--</span>
             </div>
             <div class="stat-card">
-              <span class="stat-label">Survival Time</span>
+              <span class="stat-label">Gold Rush Best</span>
+              <span class="stat-value" id="stat-coins-best">--</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Survival Best</span>
               <span class="stat-value" id="stat-survival-best">--</span>
             </div>
           </div>
@@ -213,7 +218,7 @@
               <circle cx="20" cy="30" r="10" fill="#fde047" opacity="0.8"/>
               <circle cx="80" cy="70" r="12" fill="#fde047" opacity="0.8"/>
             </svg>
-            <span class="game-status-badge phase-tag">Phase 3</span>
+            <span class="game-status-badge playable">🎮 Play Now</span>
           </div>
           <div class="game-body">
             <h3 class="game-title">Gold Rush Arena</h3>
@@ -222,14 +227,14 @@
             </p>
             <div class="game-meta-row">
               <div class="reward-pill">
-                <span>🪙</span> Up to +30 Coins
+                <span>🪙</span> Up to +50 Coins
               </div>
               <div class="difficulty-pill">
                 Difficulty: Casual
               </div>
             </div>
-            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Coming in Phase 3', 'The Coin Collection arena will be built in Phase 3!', 'info', '⏳')">
-              Launch Arena (Phase 3)
+            <button class="btn btn-primary" onclick="window.BloxLobby.launchCoinRush()">
+              Launch Arena 🚀
             </button>
           </div>
         </div>
@@ -243,12 +248,12 @@
               <polygon points="50,30 65,45 50,75 35,45" fill="#ff3366"/>
               <circle cx="50" cy="50" r="8" fill="#ffffff"/>
             </svg>
-            <span class="game-status-badge phase-tag">Phase 3</span>
+            <span class="game-status-badge playable">🎮 Play Now</span>
           </div>
           <div class="game-body">
             <h3 class="game-title">Hazard Dodge</h3>
             <p class="game-desc">
-              High-intensity avoidance sprint. Dodge moving laser grids, falling blocks, and expanding hazard zones for as long as possible.
+              High-intensity avoidance sprint. Dodge moving laser grids, bouncing mines, and expanding hazard zones for as long as possible.
             </p>
             <div class="game-meta-row">
               <div class="reward-pill">
@@ -258,8 +263,8 @@
                 Difficulty: Hard
               </div>
             </div>
-            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Coming in Phase 3', 'The Survival Dodge mini-game will be built in Phase 3!', 'info', '⏳')">
-              Launch Survival (Phase 3)
+            <button class="btn btn-primary" onclick="window.BloxLobby.launchHazardDodge()">
+              Launch Survival 🚀
             </button>
           </div>
         </div>
@@ -373,6 +378,207 @@
             <button class="touch-btn" id="touch-btn-right" aria-label="Move Right">▶</button>
           </div>
           <button class="touch-btn jump-btn" id="touch-btn-jump" aria-label="Jump">JUMP</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW: GOLD RUSH COIN DASH ARENA (PHASE 3)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-coinrush">
+      <div class="arena-container">
+
+        <!-- Arena Header with HUD -->
+        <div class="arena-nav-header">
+          <div class="arena-title-group">
+            <button class="btn btn-secondary btn-sm" onclick="window.BloxLobby.exitCoinRush()">
+              <span>←</span> Exit to Lobby
+            </button>
+            <div class="arena-icon-badge coins">🪙</div>
+            <div>
+              <h2 style="font-size: 1.15rem; font-weight: 800; color: #fff;">Gold Rush Arena</h2>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Timed Sprint • Gather Coins & Star Power-ups</div>
+            </div>
+          </div>
+
+          <div class="arena-stats-hud">
+            <div class="hud-pill timer" title="Time Remaining">
+              <span>⏱️</span>
+              <span id="cr-hud-timer">30s</span>
+            </div>
+            <div class="hud-pill coins" title="Coins Collected in this Run">
+              <span>🪙</span>
+              <span id="cr-hud-coins">0</span>
+            </div>
+            <div class="hud-pill" style="color: #ff9500; border-color: rgba(255, 149, 0, 0.3);" title="Current Combo Multiplier">
+              <span>🔥</span>
+              <span id="cr-hud-combo">x1.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Viewport Frame -->
+        <div class="arena-canvas-wrapper">
+          <canvas id="coinrush-canvas" class="arena-canvas"></canvas>
+
+          <!-- Controls Guide Overlay -->
+          <div class="arena-overlay-guide">
+            <span>Move: <span class="key-badge">W</span> <span class="key-badge">A</span> <span class="key-badge">S</span> <span class="key-badge">D</span> or <span class="key-badge">Arrow Keys</span></span>
+            <span>⭐ Star = +10 & Speed Boost!</span>
+          </div>
+
+          <!-- Result Modal Overlay -->
+          <div class="game-result-modal-overlay" id="coinrush-result-overlay">
+            <div class="result-badge-icon">💰</div>
+            <h2 class="result-title coins">ROUND COMPLETE!</h2>
+            <p class="result-subtitle" id="cr-res-subtitle">
+              Arena run completed! Max combo achieved.
+            </p>
+
+            <div class="victory-stats-grid">
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Coins Picked</span>
+                <span class="victory-stat-val" id="cr-res-coins">24</span>
+              </div>
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Final Score</span>
+                <span class="victory-stat-val" id="cr-res-score">620 pts</span>
+              </div>
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Wallet Added</span>
+                <span class="victory-stat-val" style="color: var(--coin-gold);" id="cr-res-earned">+35 ¢</span>
+              </div>
+            </div>
+
+            <div class="victory-actions">
+              <button class="btn btn-secondary" onclick="window.CoinRushGame.start()">
+                <span>🔄</span> Play Again
+              </button>
+              <button class="btn btn-primary" onclick="window.BloxLobby.exitCoinRush()">
+                <span>🏠</span> Return to Lobby
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Virtual Touch D-Pad Controls -->
+        <div class="arena-touch-bar">
+          <div class="dpad-grid">
+            <div></div>
+            <button class="dpad-btn" id="cr-btn-up">▲</button>
+            <div></div>
+            <button class="dpad-btn" id="cr-btn-left">◀</button>
+            <div></div>
+            <button class="dpad-btn" id="cr-btn-right">▶</button>
+            <div></div>
+            <button class="dpad-btn" id="cr-btn-down">▼</button>
+            <div></div>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-align: right;">
+            Touch / Click arrows to navigate
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW: HAZARD DODGE SURVIVAL (PHASE 3)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-hazarddodge">
+      <div class="arena-container">
+
+        <!-- Arena Header with HUD -->
+        <div class="arena-nav-header">
+          <div class="arena-title-group">
+            <button class="btn btn-secondary btn-sm" onclick="window.BloxLobby.exitHazardDodge()">
+              <span>←</span> Exit to Lobby
+            </button>
+            <div class="arena-icon-badge survival">⚡</div>
+            <div>
+              <h2 style="font-size: 1.15rem; font-weight: 800; color: #fff;">Hazard Dodge</h2>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Survival Sprint • Dodge Laser Grids & Plasma Mines</div>
+            </div>
+          </div>
+
+          <div class="arena-stats-hud">
+            <div class="hud-pill timer" title="Time Survived">
+              <span>⏱️</span>
+              <span id="hd-hud-time">0.0s</span>
+            </div>
+            <div class="hud-pill" style="color: #ff3366; border-color: rgba(255, 51, 102, 0.3);" title="Current Hazard Wave">
+              <span>⚠️</span>
+              <span id="hd-hud-wave">Wave 1</span>
+            </div>
+            <div class="hud-pill" id="hd-hud-shield" style="color: var(--text-muted);" title="Shield Status">
+              Shield: None
+            </div>
+            <div class="hud-pill" id="hd-hud-dash" style="color: var(--success-green);" title="Dash Cooldown">
+              Dash: READY
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Viewport Frame -->
+        <div class="arena-canvas-wrapper">
+          <canvas id="hazarddodge-canvas" class="arena-canvas"></canvas>
+
+          <!-- Controls Guide Overlay -->
+          <div class="arena-overlay-guide">
+            <span>Move: <span class="key-badge">W</span> <span class="key-badge">A</span> <span class="key-badge">S</span> <span class="key-badge">D</span></span>
+            <span>Dash: <span class="key-badge">Spacebar</span></span>
+            <span>🛡️ Energy Shield = Absorbs 1 Hit</span>
+          </div>
+
+          <!-- Result Modal Overlay -->
+          <div class="game-result-modal-overlay" id="hazarddodge-result-overlay">
+            <div class="result-badge-icon">💥</div>
+            <h2 class="result-title survival">SURVIVAL OVER!</h2>
+            <p class="result-subtitle" id="hd-res-subtitle">
+              Run ended. Great survival effort!
+            </p>
+
+            <div class="victory-stats-grid">
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Time Survived</span>
+                <span class="victory-stat-val" id="hd-res-time">32.4s</span>
+              </div>
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Survival Score</span>
+                <span class="victory-stat-val" id="hd-res-score">810 pts</span>
+              </div>
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Coins Earned</span>
+                <span class="victory-stat-val" style="color: var(--coin-gold);" id="hd-res-earned">+46 ¢</span>
+              </div>
+            </div>
+
+            <div class="victory-actions">
+              <button class="btn btn-secondary" onclick="window.HazardDodgeGame.start()">
+                <span>🔄</span> Play Again
+              </button>
+              <button class="btn btn-primary" onclick="window.BloxLobby.exitHazardDodge()">
+                <span>🏠</span> Return to Lobby
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Virtual Touch D-Pad & Dash Button -->
+        <div class="arena-touch-bar">
+          <div class="dpad-grid">
+            <div></div>
+            <button class="dpad-btn" id="hd-btn-up">▲</button>
+            <div></div>
+            <button class="dpad-btn" id="hd-btn-left">◀</button>
+            <div></div>
+            <button class="dpad-btn" id="hd-btn-right">▶</button>
+            <div></div>
+            <button class="dpad-btn" id="hd-btn-down">▼</button>
+            <div></div>
+          </div>
+          <button class="dash-btn" id="hd-btn-dash">DASH ⚡</button>
         </div>
 
       </div>
@@ -657,7 +863,7 @@
       <strong>BloxVerse ITBM Prototype</strong> • Information Technology & Business Management Presentation MVP
     </p>
     <p style="margin-top: 4px; color: var(--text-muted);">
-      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 2 Active (Obstacle Course Playable)
+      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 3 Active (All 3 Mini-Games Playable!)
     </p>
   </footer>
 
@@ -665,6 +871,8 @@
   <script src="js/state.js"></script>
   <script src="js/avatars.js"></script>
   <script src="js/obby.js"></script>
+  <script src="js/coinrush.js"></script>
+  <script src="js/hazarddodge.js"></script>
   <script src="js/lobby.js"></script>
   <script src="js/main.js"></script>
 </body>

@@ -108,6 +108,12 @@ class LobbyManager {
     if (window.ObbyGame) {
       window.ObbyGame.mount('obby-canvas');
     }
+    if (window.CoinRushGame) {
+      window.CoinRushGame.mount('coinrush-canvas');
+    }
+    if (window.HazardDodgeGame) {
+      window.HazardDodgeGame.mount('hazarddodge-canvas');
+    }
   }
 
   cacheDOM() {
@@ -131,6 +137,7 @@ class LobbyManager {
     this.dom.statTotalCoins = document.getElementById('stat-total-coins');
     this.dom.statGamesPlayed = document.getElementById('stat-games-played');
     this.dom.statObbyBest = document.getElementById('stat-obby-best');
+    this.dom.statCoinsBest = document.getElementById('stat-coins-best');
     this.dom.statSurvivalBest = document.getElementById('stat-survival-best');
 
     // Modals
@@ -262,6 +269,7 @@ class LobbyManager {
   renderStats(stats) {
     if (this.dom.statGamesPlayed) this.dom.statGamesPlayed.textContent = stats.gamesPlayed;
     if (this.dom.statObbyBest) this.dom.statObbyBest.textContent = stats.obbyHighScore > 0 ? `${stats.obbyHighScore} pts` : '--';
+    if (this.dom.statCoinsBest) this.dom.statCoinsBest.textContent = stats.coinRushHighScore > 0 ? `${stats.coinRushHighScore} pts` : '--';
     if (this.dom.statSurvivalBest) this.dom.statSurvivalBest.textContent = stats.survivalHighScore > 0 ? `${stats.survivalHighScore}s` : '--';
   }
 
@@ -465,6 +473,58 @@ class LobbyManager {
     if (window.ObbyGame) {
       window.ObbyGame.stop();
       window.ObbyGame.hideVictoryModal();
+    }
+    const gamesTab = document.querySelector('[data-view="view-games"]');
+    if (gamesTab) {
+      this.switchTab('view-games', gamesTab);
+    }
+  }
+
+  launchCoinRush() {
+    SFX.playClickSound();
+    this.dom.navTabs.forEach(btn => btn.classList.remove('active'));
+
+    this.dom.viewSections.forEach(sec => {
+      sec.classList.toggle('active', sec.id === 'view-coinrush');
+    });
+
+    if (window.CoinRushGame) {
+      window.CoinRushGame.start();
+    }
+    this.showToast('Game Started', 'Gold Rush Arena started! Collect coins!', 'coin', '🪙');
+  }
+
+  exitCoinRush() {
+    SFX.playSwitchSound();
+    if (window.CoinRushGame) {
+      window.CoinRushGame.stop();
+      window.CoinRushGame.hideResultModal();
+    }
+    const gamesTab = document.querySelector('[data-view="view-games"]');
+    if (gamesTab) {
+      this.switchTab('view-games', gamesTab);
+    }
+  }
+
+  launchHazardDodge() {
+    SFX.playClickSound();
+    this.dom.navTabs.forEach(btn => btn.classList.remove('active'));
+
+    this.dom.viewSections.forEach(sec => {
+      sec.classList.toggle('active', sec.id === 'view-hazarddodge');
+    });
+
+    if (window.HazardDodgeGame) {
+      window.HazardDodgeGame.start();
+    }
+    this.showToast('Game Started', 'Hazard Dodge started! Dodge all hazards!', 'info', '⚡');
+  }
+
+  exitHazardDodge() {
+    SFX.playSwitchSound();
+    if (window.HazardDodgeGame) {
+      window.HazardDodgeGame.stop();
+      window.HazardDodgeGame.hideResultModal();
     }
     const gamesTab = document.querySelector('[data-view="view-games"]');
     if (gamesTab) {

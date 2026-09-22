@@ -219,15 +219,9 @@
 /* Live Stats Strip */
 .stats-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 12px;
   margin-top: auto;
-}
-
-@media (max-width: 680px) {
-  .stats-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .stat-card {
