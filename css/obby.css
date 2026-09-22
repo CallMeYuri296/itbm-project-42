@@ -1,0 +1,269 @@
+/* ==========================================================================
+   BLOXVERSE ITBM EDITION - OBBY (OBSTACLE COURSE) MINI-GAME STYLES
+   Canvas Viewport, HUD Overlays, Victory Modal & Mobile Controls
+   ========================================================================== */
+
+.obby-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Obby Top Navigation Bar */
+.obby-nav-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.obby-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.obby-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff416c, #8a2387);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 14px rgba(255, 65, 108, 0.4);
+}
+
+.obby-stats-hud {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.hud-pill {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-pill.timer {
+  color: #00e5ff;
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.hud-pill.coins {
+  color: var(--coin-gold);
+  border-color: rgba(255, 184, 0, 0.3);
+}
+
+.hud-pill.checkpoint {
+  color: var(--success-green);
+  border-color: rgba(0, 230, 118, 0.3);
+}
+
+/* Canvas Viewport Frame */
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 580px;
+  background: #0d131f;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 162, 255, 0.15);
+}
+
+#obby-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* Canvas Overlaid Instructions */
+.canvas-overlay-guide {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  background: rgba(15, 17, 23, 0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.key-badge {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-strong);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+/* Virtual Touch / On-screen Controls (for tablets & presentation clicks) */
+.touch-controls-bar {
+  display: none;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 14px;
+  padding: 0 10px;
+}
+
+@media (hover: none) or (pointer: coarse) or (max-width: 800px) {
+  .touch-controls-bar {
+    display: flex;
+  }
+}
+
+.touch-btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.touch-btn {
+  background: var(--bg-surface-elevated);
+  border: 2px solid var(--border-strong);
+  color: #fff;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.08s ease, background 0.08s ease;
+}
+
+.touch-btn:active, .touch-btn.pressed {
+  transform: scale(0.92);
+  background: var(--roblox-blue);
+  border-color: #fff;
+}
+
+.touch-btn.jump-btn {
+  width: 80px;
+  background: linear-gradient(135deg, #00a2ff, #0051ff);
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Victory Overlay Dialog */
+.victory-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 14, 23, 0.88);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  z-index: 50;
+  padding: 24px;
+  animation: victoryFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.victory-modal-overlay.show {
+  display: flex;
+}
+
+@keyframes victoryFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.victory-trophy-icon {
+  font-size: 4.5rem;
+  margin-bottom: 8px;
+  animation: trophyBounce 1s infinite alternate cubic-bezier(0.2, 0.8, 0.4, 1);
+  filter: drop-shadow(0 0 25px rgba(255, 184, 0, 0.6));
+}
+
+@keyframes trophyBounce {
+  from { transform: translateY(0) rotate(-4deg); }
+  to { transform: translateY(-12px) rotate(4deg); }
+}
+
+.victory-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffd166, #ff7849);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.victory-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 440px;
+  margin-bottom: 24px;
+}
+
+.victory-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 26px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.victory-stat-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.victory-stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.victory-stat-val {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.victory-actions {
+  display: flex;
+  gap: 14px;
+}

@@ -105,6 +105,9 @@ class LobbyManager {
     this.bindEvents();
     this.renderAll();
     this.renderAvatarModalCards();
+    if (window.ObbyGame) {
+      window.ObbyGame.mount('obby-canvas');
+    }
   }
 
   cacheDOM() {
@@ -439,6 +442,34 @@ class LobbyManager {
         this.showToast('Ad Reward Granted', '+25 BloxCoins earned from Sponsor!', 'coin', '🎁');
       }
     }, 1000);
+  }
+
+  launchObby() {
+    SFX.playClickSound();
+    // Deselect nav tabs
+    this.dom.navTabs.forEach(btn => btn.classList.remove('active'));
+
+    // Show obby section
+    this.dom.viewSections.forEach(sec => {
+      sec.classList.toggle('active', sec.id === 'view-obby');
+    });
+
+    if (window.ObbyGame) {
+      window.ObbyGame.start();
+    }
+    this.showToast('Game Started', 'Tower of Obby loaded! Reach the trophy!', 'info', '🧗');
+  }
+
+  exitToLobby() {
+    SFX.playSwitchSound();
+    if (window.ObbyGame) {
+      window.ObbyGame.stop();
+      window.ObbyGame.hideVictoryModal();
+    }
+    const gamesTab = document.querySelector('[data-view="view-games"]');
+    if (gamesTab) {
+      this.switchTab('view-games', gamesTab);
+    }
   }
 }
 

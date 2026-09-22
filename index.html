@@ -9,6 +9,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/lobby.css">
+  <link rel="stylesheet" href="css/obby.css">
 </head>
 <body>
 
@@ -181,7 +182,7 @@
               <rect x="36" y="24" width="8" height="10" rx="2" fill="#00e5ff"/>
               <line x1="50" y1="85" x2="90" y2="85" stroke="#ff3366" stroke-width="4" stroke-dasharray="4 4"/>
             </svg>
-            <span class="game-status-badge phase-tag">Phase 2</span>
+            <span class="game-status-badge playable">🎮 Play Now</span>
           </div>
           <div class="game-body">
             <h3 class="game-title">Tower of Obby</h3>
@@ -196,8 +197,8 @@
                 Difficulty: Medium
               </div>
             </div>
-            <button class="btn btn-secondary" onclick="window.BloxLobby.showToast('Coming in Phase 2', 'The Obstacle Course engine will be built in Phase 2!', 'info', '⏳')">
-              Launch Obby (Phase 2)
+            <button class="btn btn-primary" onclick="window.BloxLobby.launchObby()">
+              Launch Obby 🚀
             </button>
           </div>
         </div>
@@ -280,6 +281,101 @@
         </div>
       </div>
 
+    </section>
+
+    <!-- ----------------------------------------------------------------------
+         VIEW: TOWER OF OBBY MINI-GAME (PHASE 2)
+         ---------------------------------------------------------------------- -->
+    <section class="view-section" id="view-obby">
+      <div class="obby-container">
+
+        <!-- Obby Nav Header with HUD -->
+        <div class="obby-nav-header">
+          <div class="obby-title-group">
+            <button class="btn btn-secondary btn-sm" onclick="window.BloxLobby.exitToLobby()">
+              <span>←</span> Exit to Lobby
+            </button>
+            <div class="obby-icon-badge">🧗</div>
+            <div>
+              <h2 style="font-size: 1.15rem; font-weight: 800; color: #fff;">Tower of Obby</h2>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Stage 1: Neon Skyway • Avoid Red Lasers</div>
+            </div>
+          </div>
+
+          <div class="obby-stats-hud">
+            <div class="hud-pill timer" title="Run Timer">
+              <span>⏱️</span>
+              <span id="obby-hud-timer">0.0s</span>
+            </div>
+            <div class="hud-pill coins" title="Stage Coins Collected">
+              <span>🪙</span>
+              <span id="obby-hud-coins">0</span>
+            </div>
+            <div class="hud-pill checkpoint" title="Checkpoints Cleared">
+              <span>🚩</span>
+              <span id="obby-hud-checkpoint">0 / 2</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="window.ObbyGame.respawnPlayer(false)" title="Restart from current checkpoint">
+              <span>🔄</span> Checkpoint
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Viewport Frame -->
+        <div class="canvas-wrapper">
+          <canvas id="obby-canvas"></canvas>
+
+          <!-- Controls Guide Overlay -->
+          <div class="canvas-overlay-guide">
+            <span>Move: <span class="key-badge">A</span> <span class="key-badge">D</span> or <span class="key-badge">←</span> <span class="key-badge">→</span></span>
+            <span>Jump: <span class="key-badge">Space</span> or <span class="key-badge">W</span></span>
+            <span>Reset: <span class="key-badge">R</span></span>
+          </div>
+
+          <!-- Victory Overlay Dialog -->
+          <div class="victory-modal-overlay" id="victory-overlay">
+            <div class="victory-trophy-icon">🏆</div>
+            <h2 class="victory-title">OBBY COMPLETED!</h2>
+            <p class="victory-subtitle" id="vic-subtitle">
+              Stage conquered in style! You earned +50 BloxCoins!
+            </p>
+
+            <div class="victory-stats-grid">
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Clear Time</span>
+                <span class="victory-stat-val" id="vic-time">22.4s</span>
+              </div>
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Final Score</span>
+                <span class="victory-stat-val" id="vic-score">820 pts</span>
+              </div>
+              <div class="victory-stat-box">
+                <span class="victory-stat-label">Total Reward</span>
+                <span class="victory-stat-val" style="color: var(--coin-gold);" id="vic-coins">+65 ¢</span>
+              </div>
+            </div>
+
+            <div class="victory-actions">
+              <button class="btn btn-secondary" onclick="window.ObbyGame.start()">
+                <span>🔄</span> Play Again
+              </button>
+              <button class="btn btn-primary" onclick="window.BloxLobby.exitToLobby()">
+                <span>🏠</span> Return to Lobby
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Virtual Touch Controls (Tablets / Mouse Clickers) -->
+        <div class="touch-controls-bar">
+          <div class="touch-btn-group">
+            <button class="touch-btn" id="touch-btn-left" aria-label="Move Left">◀</button>
+            <button class="touch-btn" id="touch-btn-right" aria-label="Move Right">▶</button>
+          </div>
+          <button class="touch-btn jump-btn" id="touch-btn-jump" aria-label="Jump">JUMP</button>
+        </div>
+
+      </div>
     </section>
 
     <!-- ----------------------------------------------------------------------
@@ -561,13 +657,14 @@
       <strong>BloxVerse ITBM Prototype</strong> • Information Technology & Business Management Presentation MVP
     </p>
     <p style="margin-top: 4px; color: var(--text-muted);">
-      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 1 Complete
+      Featuring Characters: Aahaan, Hetvi & Sanvi • Phase 2 Active (Obstacle Course Playable)
     </p>
   </footer>
 
   <!-- Application Scripts -->
   <script src="js/state.js"></script>
   <script src="js/avatars.js"></script>
+  <script src="js/obby.js"></script>
   <script src="js/lobby.js"></script>
   <script src="js/main.js"></script>
 </body>
